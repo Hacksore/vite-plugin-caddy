@@ -3,7 +3,9 @@ import fs from "node:fs";
 import fsExtra from "fs-extra";
 
 import { execSync, spawn } from "child_process";
+import { convertCrtToPem } from "./cert-utils";
 
+// TODO: Make this configurable
 const caddyfile = `myapp.localhost {
   tls internal
   log stdout
@@ -29,7 +31,7 @@ export default function viteCaddySslPlugin(): Plugin {
       const cwd = process.cwd();
       // write this caddyfile to ssl directory
       console.log("Writing caddyfile to", ".ssl/Caddyfile", cwd);
-      fsExtra.mkdirp(".ssl")
+      fsExtra.mkdirp(".ssl");
       fs.writeFileSync(".ssl/Caddyfile", caddyfile);
 
       // run caddy cli to start a local server on port
@@ -46,9 +48,19 @@ export default function viteCaddySslPlugin(): Plugin {
         // console.error(`stderr: ${data}`);
       });
 
-      // const https = () => ({ cert: certificate, key: certificate })
-      // config.server.https = Object.assign({}, config.server.https, https())
-      // config.preview.https = Object.assign({}, config.preview.https, https())
+      // ~/Library/Application Support/Caddy
+      const certPath = `${process.env.HOME}/Library/Application Support/Caddy/certificates/local/myapp.localhost/myapp.localhost.crt`;
+      const certKey = `${process.env.HOME}/Library/Application Support/Caddy/certificates/local/myapp.localhost/myapp.localhost.key`;
+
+      // convertCrtToPem(certPath, `${cwd}/.ssl/cert.pem`);
+      fs.writeFileSync(`${cwd}/.ssl/cert.pem`, fs.readFileSync(certPath, "utf8"), "utf8");
+      fs.writeFileSync(`${cwd}/.ssl/cert.key`, fs.readFileSync(certKey, "utf8"), "utf8");
+
+      const certificate = `${cwd}/.ssl/cert.pem`;
+      const certificateKey = `${cwd}/.ssl/cert.pem`;
+      const https = () => ({ cert: certificate, key: certificateKey });
+      config.server.https = Object.assign({}, config.server.https, https());
+      config.preview.https = Object.assign({}, config.preview.https, https());
     }
   };
 }

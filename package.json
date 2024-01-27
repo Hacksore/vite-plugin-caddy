@@ -19,7 +19,6 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "tsup src/index.ts --format cjs,esm --dts-resolve"
-    
   },
   "engines": {
     "node": ">=14.6.0"
