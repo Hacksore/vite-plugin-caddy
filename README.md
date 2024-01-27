@@ -1,4 +1,4 @@
-# @vitejs/plugin-basic-ssl [![npm](https://img.shields.io/npm/v/@vitejs/plugin-basic-ssl.svg)](https://npmjs.com/package/@vitejs/plugin-basic-ssl)
+# vite-plugin-caddy
 
 TODO: write this
 
@@ -6,11 +6,11 @@ TODO: write this
 
 ```js
 // vite.config.js
-import basicSsl from '@vitejs/plugin-basic-ssl'
+import caddySsl from 'vite-plugin-caddy'
 
 export default {
   plugins: [
-    basicSsl()
+    caddySsl()
   ]
 }
 ```

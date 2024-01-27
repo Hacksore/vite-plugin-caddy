@@ -20,7 +20,8 @@ const SSL_DIR = `${cwd}/.ssl`;
 export default function viteCaddySslPlugin(): Plugin {
   return {
     name: "vite:caddy-ssl",
-    async configResolved(config) {
+    async configResolved({ command }) {
+      if (command !== "serve") return;
       // check if caddy cli is installed
       let caddyInstalled = false;
       try {
