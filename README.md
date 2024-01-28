@@ -6,11 +6,11 @@ TODO: write this
 
 ```js
 // vite.config.js
-import caddySsl from 'vite-plugin-caddy'
+import caddyTls from 'vite-plugin-caddy'
 
 export default {
   plugins: [
-    caddySsl()
+    caddyTls()
   ]
 }
 ```

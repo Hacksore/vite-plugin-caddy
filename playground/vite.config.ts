@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
-import caddySsl from "../src/index.js";
+import caddyTsl from "../src/index.js";
 
 const config = defineConfig({
-  plugins: [caddySsl()],
+  plugins: [caddyTsl()]
 });
 
 export default config;
