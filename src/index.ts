@@ -1,18 +1,20 @@
-import type { Plugin } from "vite";
+import type { Plugin, ServerOptions } from "vite";
 import fs from "node:fs";
+import tls from "node:tls"
 import fsExtra from "fs-extra";
 
 import { execSync, spawn } from "child_process";
 
-// DOCS:
+// DOCS for caddy:
 // https://caddyserver.com/docs/json/apps/tls/automation/
 // https://caddy.community/t/how-do-i-use-rsa-instead-of-ec-certificates/7448
 // https://caddy.community/t/using-caddy-to-keep-certificates-renewed/7525
 
-
 // BLOCKER: we cant use the caddy cli to generate a cert with SANs
 // https://github.com/caddyserver/caddy/issues/6070
+// we have to use SNI to get the cert since multiple domains on a SAN cert is not supported
 
+// TODO: make this configurable
 const caddyJsonTest = `{
 	"apps": {
 		"tls": {
@@ -90,26 +92,27 @@ export default function viteCaddySslPlugin(): Plugin {
         console.error(`stderr: ${data}`);
       });
 
-      const caddyCertPath = `${process.env.HOME}/Library/Application Support/Caddy/certificates/local/myapp.localhost/myapp.localhost.crt`;
-      const caddyCertKeyPath = `${process.env.HOME}/Library/Application Support/Caddy/certificates/local/myapp.localhost/myapp.localhost.key`;
+      // TODO: Should support all operating systems
+      // https://caddyserver.com/docs/conventions#data-directory
+      const caddyCertDir = `${process.env.HOME}/Library/Application Support/Caddy/certificates/local`;
+      const https: ServerOptions["https"] = {
+        SNICallback: (servername, cb) => {
+          console.log("SNICallback", servername);
 
-      fs.writeFileSync(
-        `${CADDY_CONFIG_DIR}/cert.pem`,
-        fs.readFileSync(caddyCertPath, "utf8"),
-        "utf8"
-      );
+          const caddyCertPath = `${caddyCertDir}/${servername}/${servername}.crt`;
+          const caddyCertKeyPath = `${caddyCertDir}/${servername}/${servername}.key`;
 
-      fs.writeFileSync(
-        `${CADDY_CONFIG_DIR}/cert.key`,
-        fs.readFileSync(caddyCertKeyPath, "utf8"),
-        "utf8"
-      );
+          const secureContext = tls.createSecureContext({
+            key: fs.readFileSync(caddyCertKeyPath),
+            cert: fs.readFileSync(caddyCertPath)
+          })
 
-      const certificatePath = `${CADDY_CONFIG_DIR}/cert.pem`;
-      const certificateKeyPath = `${CADDY_CONFIG_DIR}/cert.key`;
-      const https = () => ({ cert: certificatePath, key: certificateKeyPath });
-      server.https = Object.assign({}, server.https, https());
-      preview.https = Object.assign({}, preview.https, https());
+          cb(null, secureContext);
+        }
+      };
+
+      server.https = { ...server.https, ...https };
+      preview.https = { ...preview.https, ...https };
     }
   };
 }

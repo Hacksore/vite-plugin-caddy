@@ -1,0 +1,21 @@
+{
+	"apps": {
+		"tls": {
+			"certificates": {
+				"automate": [
+					"myapp.localhost",
+          "localhost",
+          "127.0.0.0"
+				]
+			},
+			"automation": {
+				"policies": [
+					{
+			      "key_type": "rsa4096",
+						"issuers": [{"module": "internal"}]
+					}
+				]
+			}
+		}
+	}
+}
