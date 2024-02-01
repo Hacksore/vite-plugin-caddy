@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import picocolors from "picocolors";
+import chalk from "chalk";
 import { spawn } from "child_process";
 import { parseNamesFromCaddyFile, validateCaddyIsInstalled } from "./utils";
 
@@ -10,6 +10,7 @@ export default function viteCaddyTlsPlugin(): Plugin {
     name: "vite:caddy-tls",
     async configResolved({ command }) {
       if (command !== "serve") return;
+      console.log("starting caddy plugin...");
 
       validateCaddyIsInstalled();
 
@@ -29,16 +30,17 @@ export default function viteCaddyTlsPlugin(): Plugin {
       const servers = parseNamesFromCaddyFile(`${cwd}/Caddyfile`);
       console.log();
       console.log(
-        picocolors.green("🔒 Caddy is running to proxy your traffic on https")
+        chalk.green("🔒 Caddy is running to proxy your traffic on https")
       );
 
+      console.log();
       console.log(
         `🔗 Access your local ${servers.length > 1 ? "servers" : "server"} `
       );
 
       // we need to parse the Caddyfile
       servers.forEach(domain => {
-        console.log(picocolors.blue(`🌍 https://${domain}`));
+        console.log(chalk.blue(`🌍 https://${domain}`));
       });
 
       console.log();
