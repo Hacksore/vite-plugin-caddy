@@ -1,35 +1,19 @@
 import type { Plugin } from "vite";
-import fs from "node:fs";
-import { execSync, spawn } from "child_process";
-import { parseNamesFromCaddyFile } from "./utils";
+import picocolors from "picocolors";
+import { spawn } from "child_process";
+import { parseNamesFromCaddyFile, validateCaddyIsInstalled } from "./utils";
 
 const cwd = process.cwd();
 
-function validateCaddyIsInstalled() {
-  // check if caddy cli is installed
-  let caddyInstalled = false;
-  try {
-    execSync("caddy version");
-    caddyInstalled = true;
-  } catch (e) {
-    caddyInstalled = false;
-    console.error("caddy cli is not installed");
-  }
-
-  return caddyInstalled;
-}
-
-// https://caddyserver.com/docs/conventions#data-directory
-// get the cert from here
-export default function viteCaddySslPlugin(): Plugin {
+export default function viteCaddyTlsPlugin(): Plugin {
   return {
-    name: "vite:caddy-ssl",
-    async configResolved({ command, server }) {
+    name: "vite:caddy-tls",
+    async configResolved({ command }) {
       if (command !== "serve") return;
 
       validateCaddyIsInstalled();
 
-      // run caddy cli to start a local server on port
+      // run caddy cli to start the server
       const handle = spawn(`caddy run --config "${cwd}/Caddyfile"`, {
         shell: true
       });
@@ -38,16 +22,23 @@ export default function viteCaddySslPlugin(): Plugin {
         console.log(`stdout: ${data}`);
       });
 
-      handle.stderr.on("data", data => {
-        // console.error(`stderr: ${data}`);
+      handle.stderr.on("data", () => {
+        // TODO: handle error
       });
 
+      const servers = parseNamesFromCaddyFile(`${cwd}/Caddyfile`);
       console.log();
-      console.log("🔥 Caddy server is running and the following domains are available:");
+      console.log(
+        picocolors.green("🔒 Caddy is running to proxy your traffic on https")
+      );
+
+      console.log(
+        `🔗 Access your local ${servers.length > 1 ? "servers" : "server"} `
+      );
 
       // we need to parse the Caddyfile
-      parseNamesFromCaddyFile(`${cwd}/Caddyfile`).forEach(domain => {
-        console.log(`https://${domain}`);
+      servers.forEach(domain => {
+        console.log(picocolors.blue(`🌍 https://${domain}`));
       });
 
       console.log();
