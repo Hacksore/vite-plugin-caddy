@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
-import caddyTsl from "../src/index.js";
+import caddyTls from "../src/index.js";
 
 const config = defineConfig({
-  plugins: [caddyTsl()]
+  plugins: [caddyTls()],
 });
 
 export default config;
