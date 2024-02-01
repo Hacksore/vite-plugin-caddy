@@ -25,12 +25,12 @@
   "packageManager": "pnpm@8.10.5",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vitejs/vite-plugin-basic-ssl.git"
+    "url": "git+https://github.com/Hacksore/vite-plugin-caddy.git"
   },
   "bugs": {
-    "url": "https://github.com/vitejs/vite-plugin-basic-ssl/issues"
+    "url": "https://github.com/Hacksore/vite-plugin-caddy/issues"
   },
-  "homepage": "https://github.com/vitejs/vite-plugin-basic-ssl/#readme",
+  "homepage": "https://github.com/Hacksore/vite-plugin-caddy/#readme",
   "peerDependencies": {
     "vite": "^3.0.0 || ^4.0.0 || ^5.0.0"
   },
