@@ -31,19 +31,6 @@ export default function viteCaddyTlsPlugin(): Plugin {
       console.log();
       console.log(
         chalk.green("🔒 Caddy is running to proxy your traffic on https")
-      );
-
-      console.log();
-      console.log(
-        `🔗 Access your local ${servers.length > 1 ? "servers" : "server"} `
-      );
-
-      // we need to parse the Caddyfile
-      servers.forEach(domain => {
-        console.log(chalk.blue(`🌍 https://${domain}`));
-      });
-
-      console.log();
     }
   };
 }
