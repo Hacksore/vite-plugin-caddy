@@ -1,27 +1,7 @@
-import fs from "node:fs";
 import { execSync } from "child_process";
-
-/**
- * a Caddyfile "parser" that gets all the domain names
- *
- * @returns {string[]} the domain names from the Caddyfile
- */
-export function parseNamesFromCaddyFile(caddyFilePath: string) {
-  const names: string[] = [];
-  const caddyFile = fs.readFileSync(caddyFilePath, "utf-8");
-  const lines = caddyFile.split("\n");
-
-  // iterate the lines and only give me the ones that end in {
-  for (const line of lines) {
-    if (line.endsWith("{")) {
-      // get the domain name
-      const [domain] = line.split(" ");
-      names.push(domain);
-    }
-  }
-
-  return names;
-}
+import os from "node:os";
+import path from "node:path";
+import fs from "node:fs";
 
 /**
  * This function checks if caddy cli is installed
@@ -39,4 +19,15 @@ export function validateCaddyIsInstalled() {
   }
 
   return caddyInstalled;
+}
+
+// make a function that will write to the temp dir on all platforms
+// and then return the path to the file
+export function writeTempFile(content: string, fileName: string) {
+  const tempDir = os.tmpdir();
+  const filePath = path.join(tempDir, fileName);
+
+  fs.writeFileSync(filePath, content);
+
+  return filePath;
 }

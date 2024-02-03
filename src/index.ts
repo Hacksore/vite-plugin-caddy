@@ -1,21 +1,98 @@
 import type { Plugin } from "vite";
 import chalk from "chalk";
 import { spawn } from "child_process";
-import { parseNamesFromCaddyFile, validateCaddyIsInstalled } from "./utils";
+import { validateCaddyIsInstalled, writeTempFile } from "./utils";
 
 const cwd = process.cwd();
 
-export default function viteCaddyTlsPlugin(): Plugin {
+function generateCaddyConfig(domains: string[]) {
+  const config = {
+    apps: {
+      http: {
+        servers: {
+          srv0: {
+            listen: [":443"],
+            routes: domains.map(domain => ({
+              match: [
+                {
+                  host: [domain]
+                }
+              ],
+              handle: [
+                {
+                  handler: "subroute",
+                  routes: [
+                    {
+                      handle: [
+                        {
+                          handler: "reverse_proxy",
+                          upstreams: [
+                            {
+                              dial: "localhost:5173"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              terminal: true
+            })),
+            logs: {
+              logger_names: domains.reduce((loggerNames, domain) => {
+                // @ts-ignore
+                loggerNames[domain] = "stdout";
+                return loggerNames;
+              }, {})
+            }
+          }
+        }
+      },
+      tls: {
+        automation: {
+          policies: [
+            {
+              subjects: domains,
+              issuers: [
+                {
+                  module: "internal"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  };
+
+  return config;
+}
+
+export default function viteCaddyTlsPlugin({
+  domains,
+  cors
+}: {
+  domains: string | string[];
+  cors?: string;
+}): Plugin {
   return {
     name: "vite:caddy-tls",
-    async configResolved({ command }) {
-      if (command !== "serve") return;
-      console.log("starting caddy plugin...");
-
+    async configureServer() {
       validateCaddyIsInstalled();
 
+      const domainArray = Array.isArray(domains) ? domains : [domains];
+      const generatedConfig = generateCaddyConfig(domainArray);
+
+      const caddyConfigPath = writeTempFile(
+        JSON.stringify(generatedConfig, null, 2),
+        "caddy.json"
+      );
+
       // run caddy cli to start the server
-      const handle = spawn(`caddy run --config "${cwd}/Caddyfile"`, {
+      const caddyCommand = `caddy run --config ${caddyConfigPath}`;
+      console.log(caddyCommand);
+      const handle = spawn(caddyCommand, {
         shell: true
       });
 
@@ -27,7 +104,6 @@ export default function viteCaddyTlsPlugin(): Plugin {
         // TODO: handle error
       });
 
-      const servers = parseNamesFromCaddyFile(`${cwd}/Caddyfile`);
       console.log();
       console.log(
         chalk.green("🔒 Caddy is running to proxy your traffic on https")
@@ -35,11 +111,11 @@ export default function viteCaddyTlsPlugin(): Plugin {
 
       console.log();
       console.log(
-        `🔗 Access your local ${servers.length > 1 ? "servers" : "server"} `
+        `🔗 Access your local ${domainArray.length > 1 ? "servers" : "server"} `
       );
 
       // we need to parse the Caddyfile
-      servers.forEach(domain => {
+      domainArray.forEach(domain => {
         console.log(chalk.blue(`🌍 https://${domain}`));
       });
 
