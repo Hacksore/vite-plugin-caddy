@@ -16,12 +16,13 @@ export default function viteCaddyTlsPlugin({
 }): Plugin {
   return {
     name: "vite:caddy-tls",
-    async configureServer({ httpServer }) {
+    async configureServer({ httpServer, config }) {
       validateCaddyIsInstalled();
 
+      const { port } = config.server;
       const rawDomainArray = Array.isArray(domains) ? domains : [domains];
       const domainArray = Array.from(new Set(rawDomainArray));
-      const generatedConfig = generateCaddyConfig(domainArray);
+      const generatedConfig = generateCaddyConfig(domainArray, port, cors);
 
       const caddyConfig = writeTempFile(
         JSON.stringify(generatedConfig, null, 2)

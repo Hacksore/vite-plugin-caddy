@@ -37,7 +37,7 @@ export function writeTempFile(content: string) {
   };
 }
 
-export function generateCaddyConfig(domains: string[]) {
+export function generateCaddyConfig(domains: string[], port: number = 5173, cors?: string) {
   const config = {
     apps: {
       http: {
@@ -60,7 +60,7 @@ export function generateCaddyConfig(domains: string[]) {
                           handler: "reverse_proxy",
                           upstreams: [
                             {
-                              dial: "localhost:5173"
+                              dial: `localhost:${port}`
                             }
                           ]
                         }
