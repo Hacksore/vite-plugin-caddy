@@ -69,6 +69,8 @@ function generateCaddyConfig(domains: string[]) {
   return config;
 }
 
+let pid: number | undefined;
+
 export default function viteCaddyTlsPlugin({
   domains,
   cors
@@ -78,8 +80,10 @@ export default function viteCaddyTlsPlugin({
 }): Plugin {
   return {
     name: "vite:caddy-tls",
-    async configureServer() {
+    async configureServer({ httpServer }) {
       validateCaddyIsInstalled();
+
+      console.log("Using Caddy to proxy your traffic on https", Date.now());
 
       const domainArray = Array.isArray(domains) ? domains : [domains];
       const generatedConfig = generateCaddyConfig(domainArray);
@@ -91,10 +95,12 @@ export default function viteCaddyTlsPlugin({
 
       // run caddy cli to start the server
       const caddyCommand = `caddy run --config ${caddyConfigPath}`;
-      console.log(caddyCommand);
       const handle = spawn(caddyCommand, {
         shell: true
       });
+
+      console.log("PID:", handle.pid);
+      pid = handle.pid;
 
       handle.stdout.on("data", data => {
         console.log(`stdout: ${data}`);
@@ -120,6 +126,14 @@ export default function viteCaddyTlsPlugin({
       });
 
       console.log();
+
+      // if we stop kill the caddy process
+      httpServer?.on("close", () => {
+        console.log("Killing Caddy process");
+        if (pid) {
+          process.kill(pid);
+        }
+      });
     }
   };
 }
