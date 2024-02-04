@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import caddyTls from "../src/index.js";
+import caddyTls from "../packages/plugin/src/index.js";
 
 const config = defineConfig({
   server: {

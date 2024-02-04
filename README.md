@@ -1,7 +1,7 @@
 # vite-plugin-caddy
 
 > [!WARNING]
-> THIS PLUGIN IS HIGHLY EXPERIMENTAL, USE WITH CAUTION
+> THIS PLUGIN IS HIGHLY EXPERIMENTAL AND UNSTABLE, USE WITH CAUTION
 
 ## Usage
 
@@ -33,6 +33,9 @@ Will give this in the terminal, allow you to connect to your app on HTTPS with a
 🌍 https://something-else.localhost
 
 ```
+
+## Contributing
+See [CONTRIBUTING.md](./CONTRIBUTING.md) to see how to get started.
  
 ## License
 

@@ -1,9 +1,9 @@
 {
   "pipeline": {
+    "build": {},
     "start": {
       "cache": false,
       "persistent": true
     }
   }
 }
-
