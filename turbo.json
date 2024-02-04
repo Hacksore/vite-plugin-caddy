@@ -1,0 +1,9 @@
+{
+  "pipeline": {
+    "start": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+
