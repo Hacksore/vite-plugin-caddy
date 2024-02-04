@@ -7,13 +7,28 @@ import {
   writeTempFile
 } from "./utils.js";
 
+export interface ViteCaddyTlsPluginOptions {
+  /** The domains to proxy traffic for */
+  domains: string[];
+  cors?: string;
+}
+
+/**
+ * Vite plugin to run Caddy server to proxy traffic on https for local development
+ *
+ * @param {@link ViteCaddyTlsPluginOptions} config - the config to pass to the plugin
+ * @example
+ * ```
+ * caddyTls({
+ *   domains: ["ligam.localhost", "ok.localhost"],
+ * })
+ * ```
+ * @returns {Plugin} - a Vite plugin
+ */
 export default function viteCaddyTlsPlugin({
   domains,
   cors
-}: {
-  domains: string | string[];
-  cors?: string;
-}): Plugin {
+}: ViteCaddyTlsPluginOptions): Plugin {
   return {
     name: "vite:caddy-tls",
     async configureServer({ httpServer, config }) {
