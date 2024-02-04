@@ -5,7 +5,7 @@ import {
   generateCaddyConfig,
   validateCaddyIsInstalled,
   writeTempFile
-} from "./utils";
+} from "./utils.js";
 
 export default function viteCaddyTlsPlugin({
   domains,
