@@ -18,7 +18,8 @@
   "scripts": {
     "start": "turbo run start",
     "dev": "tsup --watch src/**/* src/index.ts --format esm --dts-resolve",
-    "build": "tsup src/index.ts --format esm"
+    "build": "tsup src/index.ts --format esm",
+    "build:docs": "typedoc --out docs src/index.ts"
   },
   "engines": {
     "node": ">=16.0.0"
