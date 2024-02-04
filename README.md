@@ -1,18 +1,37 @@
 # vite-plugin-caddy
 
-TODO: write this
+> [!WARNING]
+> THIS PLUGIN IS HIGHLY EXPERIMENTAL, USE WITH CAUTION
 
 ## Usage
 
 ```js
 // vite.config.js
-import caddyTls from 'vite-plugin-caddy'
+import { defineConfig } from "vite";
+import caddyTls from "vite-plugin-caddy";
 
-export default {
+const config = defineConfig({
   plugins: [
-    caddyTls()
+    caddyTls({
+      domains: ["this.is.cool.localhost", "something-else.localhost"],
+    })
   ]
-}
+});
+
+export default config;
+```
+
+Will give this in the terminal, allow you to connect to your app on HTTPS with a self-signed and trusted cert.
+```
+> vite
+
+
+🔒 Caddy is running to proxy your traffic on https
+
+🔗 Access your local servers 
+🌍 https://this.is.cool.localhost
+🌍 https://something-else.localhost
+
 ```
  
 ## License

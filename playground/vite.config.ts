@@ -7,7 +7,7 @@ const config = defineConfig({
   },
   plugins: [
     caddyTls({
-      domains: ["ligam.localhost", "ok.localhost"],
+      domains: ["this.is.cool.localhost", "something-else.localhost"],
     })
   ]
 });
