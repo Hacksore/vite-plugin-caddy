@@ -7,7 +7,7 @@
   "scripts": {
     "start": "turbo run start",
     "build": "turbo run build",
-    "build:docs": "typedoc --out docs packages/plugin/src/index.ts"
+    "build:docs": "typedoc --out docs packages/plugin/src/index.ts --tsconfig packages/plugin/tsconfig.json"
   },
   "engines": {
     "node": ">=16.0.0"
