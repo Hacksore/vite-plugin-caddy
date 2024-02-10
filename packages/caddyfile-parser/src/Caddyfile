@@ -1,0 +1,11 @@
+myapp.localhost {
+  tls internal
+  log stdout
+  reverse_proxy localhost:3000
+}
+
+test.localhost {
+  tls internal
+  log stdout
+  reverse_proxy localhost:3000
+}

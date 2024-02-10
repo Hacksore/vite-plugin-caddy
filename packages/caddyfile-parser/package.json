@@ -1,0 +1,32 @@
+{
+  "name": "caddyfile-parser",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": "Hacksore",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest",
+    "start": "turbo run start",
+    "dev": "tsup --watch src/**/* src/index.ts --format esm --dts-resolve",
+    "build": "tsup src/index.ts --format esm",
+    "build:docs": "typedoc --out docs src/index.ts"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "vitest": "^0.15.1"
+  },
+  "dependencies": {
+    "acorn": "^8.11.3"
+  }
+}
