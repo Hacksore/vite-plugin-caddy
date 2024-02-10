@@ -4,6 +4,8 @@ import fs from "node:fs";
 import { parseCaddyFile } from "./index.js";
 
 const caddyfile = fs.readFileSync(`${__dirname}/Caddyfile`, "utf-8");
+
+// NOTE: it's not parsing multiple blocks of distinct hosts
 describe("caddyfile-parser", () => {
   it("should parse all hosts from the caddy file", () => {
     const hosts = parseCaddyFile(caddyfile);
