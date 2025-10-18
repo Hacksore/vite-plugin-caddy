@@ -16,15 +16,14 @@
     }
   },
   "scripts": {
-    "start": "turbo run start",
     "dev": "tsup --watch src/**/* src/index.ts --format esm --dts-resolve",
-    "build": "tsup src/index.ts --format esm",
+    "build": "tsup src/index.ts --format esm --dts",
     "build:docs": "typedoc --out docs src/index.ts"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@8.10.5",
+  "packageManager": "pnpm@10.18.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Hacksore/vite-plugin-caddy.git"
@@ -34,16 +33,15 @@
   },
   "homepage": "https://github.com/Hacksore/vite-plugin-caddy/#readme",
   "peerDependencies": {
-    "vite": "^3.0.0 || ^4.0.0 || ^5.0.0"
+    "vite": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^20.11.16",
     "fs-extra": "^10.1.0",
-    "prettier": "^2.7.1",
     "tsup": "^8.0.1",
-    "typedoc": "^0.25.7",
-    "vitest": "^0.15.1"
+    "typedoc": "^0.25.13",
+    "vite": "^7.0.0"
   },
   "dependencies": {
     "chalk": "^5.3.0"

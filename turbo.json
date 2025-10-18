@@ -1,6 +1,7 @@
 {
-  "pipeline": {
+  "tasks": {
     "build": {},
+    "build:docs": {},
     "start": {
       "cache": false,
       "persistent": true

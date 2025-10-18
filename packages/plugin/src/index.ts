@@ -1,4 +1,4 @@
-import type { Plugin } from "vite";
+import type { PluginOption } from "vite";
 import chalk from "chalk";
 import { spawn } from "node:child_process";
 import {
@@ -28,7 +28,7 @@ export interface ViteCaddyTlsPluginOptions {
 export default function viteCaddyTlsPlugin({
   domains,
   cors
-}: ViteCaddyTlsPluginOptions): Plugin {
+}: ViteCaddyTlsPluginOptions): PluginOption {
   return {
     name: "vite:caddy-tls",
     async configureServer({ httpServer, config }) {

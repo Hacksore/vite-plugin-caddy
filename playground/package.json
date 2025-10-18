@@ -6,7 +6,11 @@
   "description": "Example of a basic ssl setup using an automatically generated self-signed certificate",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "vite build",
     "serve": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
   }
 }

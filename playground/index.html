@@ -7,11 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/style.css" />
   <title>Caddy demo</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const locationElement = document.getElementById("location");
+      locationElement.textContent = `You are visiting: ${window.location.href}`;
+    });
+  </script>
 </head>
 
 <body>
   <div id="app">
-    <h1>HTTPS powered by Caddy server</h1>
+    <h1>Vite Plugin Caddy</h1>
+    <p>This page is served over HTTPS using Caddy server with a self-signed certificate.</p>
+    <p id="location"></p>
   </div>
 </body>
 
