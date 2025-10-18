@@ -33,22 +33,26 @@ export function writeTempFile(content: string) {
 
   return {
     fullPath: filePath,
-    filename
+    filename,
   };
 }
 
-export function generateCaddyConfig(domains: string[], port: number = 5173, cors?: string) {
+export function generateCaddyConfig(
+  domains: string[],
+  port: number = 5173,
+  cors?: string,
+) {
   const config = {
     apps: {
       http: {
         servers: {
           srv0: {
             listen: [":443"],
-            routes: domains.map(domain => ({
+            routes: domains.map((domain) => ({
               match: [
                 {
-                  host: [domain]
-                }
+                  host: [domain],
+                },
               ],
               handle: [
                 {
@@ -60,26 +64,26 @@ export function generateCaddyConfig(domains: string[], port: number = 5173, cors
                           handler: "reverse_proxy",
                           upstreams: [
                             {
-                              dial: `localhost:${port}`
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
+                              dial: `localhost:${port}`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
-              terminal: true
+              terminal: true,
             })),
             logs: {
               logger_names: domains.reduce((loggerNames, domain) => {
                 // @ts-ignore
                 loggerNames[domain] = "stdout";
                 return loggerNames;
-              }, {})
-            }
-          }
-        }
+              }, {}),
+            },
+          },
+        },
       },
       tls: {
         automation: {
@@ -88,14 +92,14 @@ export function generateCaddyConfig(domains: string[], port: number = 5173, cors
               subjects: domains,
               issuers: [
                 {
-                  module: "internal"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    }
+                  module: "internal",
+                },
+              ],
+            },
+          ],
+        },
+      },
+    },
   };
 
   return config;

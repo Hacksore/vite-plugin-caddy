@@ -8,8 +8,8 @@ const config = defineConfig({
   plugins: [
     caddyTls({
       domains: ["console.aws.localhost"],
-    })
-  ]
+    }),
+  ],
 });
 
 export default config;
